@@ -45,13 +45,17 @@ public class AuthorizationServerConfiguration extends AuthorizationServerConfigu
     @Override
     public void configure(final ClientDetailsServiceConfigurer clients) throws Exception {
         clients.inMemory()
+        
+        		//the client credentials
                 .withClient("client1")
                 .secret(passwordEncoder.encode("abc123"))
-                .authorizedGrantTypes("password", "authorization_code", "refresh_token", "client_credentials")
+                .authorizedGrantTypes("password", "client_credentials")
                 .scopes("read", "write")
                 .accessTokenValiditySeconds(3600)       // 1 hour
                 .refreshTokenValiditySeconds(2592000)  // 30 days
-                .redirectUris("http://localhost:8081/webservice/secured");
+                .redirectUris("http://localhost:8081/webservice/secured")
+                //resource server credentials, it also needs to be registered!
+        		.and().withClient("client2").secret(passwordEncoder.encode("abc321"));
     } 
 
     @Bean
